@@ -58,4 +58,26 @@
     }
 }
 
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self updateOnRotate];
+}
+
+- (void) viewWillTransitionToSize:(CGSize)size
+        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self updateOnRotate];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {}];
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
+- (void) updateOnRotate
+{
+    CGSize notificationSize = CRNotificationViewSizeForOrientation(self.notification.notificationType, self.notification.preferredHeight, self.interfaceOrientation);
+    [self.view setFrame:[self.view window].frame];
+    self.toastView.frame = CGRectMake(0, 0, notificationSize.width, notificationSize.height);
+}
+
 @end
